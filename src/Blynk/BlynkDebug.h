@@ -292,8 +292,10 @@ void            BlynkFatal() BLYNK_NORETURN;
     #define BLYNK_LOG3(p1,p2,p3)
     #define BLYNK_LOG4(p1,p2,p3,p4)
     #define BLYNK_LOG6(p1,p2,p3,p4,p5,p6)
-    #define BLYNK_LOG_IP(msg, ip)
-    #define BLYNK_LOG_IP_REV(msg, ip)
+    // Reference ip, so a variable kept only for the log is not reported
+    // as unused when logging is off (#504)
+    #define BLYNK_LOG_IP(msg, ip)     ((void)(ip))
+    #define BLYNK_LOG_IP_REV(msg, ip) ((void)(ip))
 #endif
 
 #ifndef BLYNK_DBG_BREAK
