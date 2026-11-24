@@ -51,7 +51,18 @@ void setup()
   // Debug console
   Serial.begin(9600);
 
+  // The server certificate must chain to ISRG Root X1 (Let's Encrypt).
+  // For a server with its own CA or a self-signed certificate, call one
+  // of these before Blynk.begin():
+  //Blynk.setRootCA(server_ca_pem);      // the CA (or the certificate) as PEM text
+  //Blynk.setFingerprint("AA:BB:...");   // SHA-256 of the server certificate:
+  //                                     // openssl x509 -in server.crt -noout -fingerprint -sha256
+  //Blynk.setInsecure();                 // no verification: testing only
+
   Blynk.begin(auth, ssid, pass);
+  // You can also specify server:
+  //Blynk.begin(auth, ssid, pass, "myserver.example.com", 9443);
+  //Blynk.begin(auth, ssid, pass, IPAddress(192,168,1,100), 9443);
 }
 
 void loop()
