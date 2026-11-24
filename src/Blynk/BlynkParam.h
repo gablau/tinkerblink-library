@@ -19,6 +19,26 @@
 #define BLYNK_PARAM_KV(k, v) k "\0" v "\0"
 #define BLYNK_PARAM_PLACEHOLDER_64 "PlaceholderPlaceholderPlaceholderPlaceholderPlaceholderPlaceholder"
 
+#if !defined(BLYNK_NO_LONGLONG)
+// Own parser: atoll() is missing on some toolchains (AVR, MSP430: #505)
+static inline
+long long BlynkAtoll(const char* s)
+{
+    if (!s) return 0;
+    while (*s == ' ' || *s == '\t') s++;
+    bool neg = false;
+    if (*s == '-' || *s == '+') {
+        neg = (*s == '-');
+        s++;
+    }
+    unsigned long long v = 0;
+    while (*s >= '0' && *s <= '9') {
+        v = v * 10 + (unsigned long long)(*s++ - '0');
+    }
+    return neg ? (long long)(0ULL - v) : (long long)v;
+}
+#endif
+
 class BlynkParam
 {
 public:
@@ -34,7 +54,9 @@ public:
         const char* asString() const    { return ptr; }
         int         asInt() const       { if(!isValid()) return 0; return atoi(ptr); }
         long        asLong() const      { if(!isValid()) return 0; return atol(ptr); }
-        //long long   asLongLong() const  { return atoll(ptr); }
+#if !defined(BLYNK_NO_LONGLONG)
+        long long   asLongLong() const  { if(!isValid()) return 0; return BlynkAtoll(ptr); }
+#endif
 #ifndef BLYNK_NO_FLOAT
         double      asDouble() const    { if(!isValid()) return 0; return atof(ptr); }
         float       asFloat() const     { if(!isValid()) return 0; return atof(ptr); }
@@ -71,7 +93,9 @@ public:
     const char* asString() const    { return buff; }
     int         asInt() const       { return atoi(buff); }
     long        asLong() const      { return atol(buff); }
-    //long long   asLongLong() const  { return atoll(buff); }
+#if !defined(BLYNK_NO_LONGLONG)
+    long long   asLongLong() const  { return BlynkAtoll(buff); }
+#endif
 #ifndef BLYNK_NO_FLOAT
     double      asDouble() const    { return atof(buff); }
     float       asFloat() const     { return atof(buff); }
