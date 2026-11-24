@@ -18,6 +18,11 @@
 #include <Blynk/BlynkApi.h>
 #include <utility/BlynkUtility.h>
 
+// Longest host name accepted in a redirect, including the terminator
+#ifndef BLYNK_REDIRECT_HOST_SIZE
+#define BLYNK_REDIRECT_HOST_SIZE 64
+#endif
+
 template <class Transp>
 class BlynkProtocol
     : public BlynkApi< BlynkProtocol<Transp> >
@@ -327,7 +332,9 @@ bool BlynkProtocol<Transp>::processInput(void)
     } break;
     case BLYNK_CMD_REDIRECT: {
         if (!redir_serv) {
-             redir_serv = (char*)malloc(32);
+            redir_serv = (char*)malloc(BLYNK_REDIRECT_HOST_SIZE);
+            if (!redir_serv)
+                return false;
         }
         BlynkParam param(inputBuffer, hdr.length);
         uint16_t redir_port = BLYNK_DEFAULT_PORT; // TODO: Fixit
@@ -335,9 +342,18 @@ bool BlynkProtocol<Transp>::processInput(void)
         BlynkParam::iterator it = param.begin();
         if (it >= param.end())
             return false;
-        strncpy(redir_serv, it.asStr(), 32);
-        if (++it < param.end())
-            redir_port = it.asLong();
+
+        // CVE-2019-5065: strncpy does not terminate a host name that fills
+        // the buffer, so terminate it explicitly
+        strncpy(redir_serv, it.asStr(), BLYNK_REDIRECT_HOST_SIZE);
+        redir_serv[BLYNK_REDIRECT_HOST_SIZE-1] = '\0';
+
+        if (++it < param.end()) {
+            const long p = it.asLong();
+            if (p > 0 && p <= 65535) {
+                redir_port = p;
+            }
+        }
         BLYNK_LOG4(BLYNK_F("Redirecting to "), redir_serv, ':', redir_port);
         conn.disconnect();
         conn.begin(redir_serv, redir_port);
@@ -357,12 +373,20 @@ bool BlynkProtocol<Transp>::processInput(void)
         if (it >= param.end())
             return true;
 
-        uint32_t cmd32;
-        memcpy(&cmd32, it.asStr(), sizeof(cmd32));
+        // Command names are up to 4 chars ("rtc", "acon"): copy only the
+        // name, never past the end of the message
+        uint32_t cmd32 = 0;
+        memcpy(&cmd32, it.asStr(), BlynkMin(strlen(it.asStr()), sizeof(cmd32)));
 
         ++it;
         char* start = (char*)(it).asStr();
-        unsigned length = hdr.length - (start - (char*)inputBuffer);
+        const size_t offset = start - (char*)inputBuffer;
+        // The name may be the whole message (no arguments): then the
+        // iterator points past its end, and the arguments are empty
+        const size_t length = (offset < hdr.length) ? (hdr.length - offset) : 0;
+        if (offset > hdr.length) {
+            start = (char*)inputBuffer + hdr.length;
+        }
         BlynkParam param2(start, length);
 
         switch (cmd32) {
