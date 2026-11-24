@@ -29,7 +29,7 @@ const char ssid[] = "YourWiFi";
 const char pass[] = "YourPassword";
 
 // Blynk cloud server
-const char* host = "blynk-cloud.com";
+const char* host = "myserver.example.com";
 unsigned int port = 8080;
 
 WiFiClient client;

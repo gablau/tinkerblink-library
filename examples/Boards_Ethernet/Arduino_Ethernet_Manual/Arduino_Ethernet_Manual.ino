@@ -64,7 +64,7 @@ void setup()
 
   Blynk.begin(auth, server_ip, 8080, arduino_ip, dns_ip, gateway_ip, subnet_mask, arduino_mac);
   // Or like this:
-  //Blynk.begin(auth, "blynk-cloud.com", 80, arduino_ip, dns_ip, gateway_ip, subnet_mask, arduino_mac);
+  //Blynk.begin(auth, "myserver.example.com", 8080, arduino_ip, dns_ip, gateway_ip, subnet_mask, arduino_mac);
 }
 
 void loop()

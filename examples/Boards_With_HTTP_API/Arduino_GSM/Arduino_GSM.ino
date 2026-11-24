@@ -25,7 +25,7 @@
 const char auth[] = "YourAuthToken";
 
 // Blynk cloud server
-const char* host = "blynk-cloud.com";
+const char* host = "myserver.example.com";
 unsigned int port = 8080;
 
 // Network settings

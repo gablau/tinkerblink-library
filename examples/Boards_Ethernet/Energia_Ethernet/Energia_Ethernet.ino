@@ -43,7 +43,7 @@ void setup()
 
   Blynk.begin(auth);
   // You can also specify server:
-  //Blynk.begin(auth, "blynk-cloud.com", 80);
+  //Blynk.begin(auth, "myserver.example.com", 8080);
   //Blynk.begin(auth, IPAddress(192,168,1,100), 8080);
 }
 

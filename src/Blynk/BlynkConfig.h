@@ -17,9 +17,19 @@
  * Change these settings to match your need
  ***************************************************/
 
-#define BLYNK_DEFAULT_DOMAIN     "blynk-cloud.com"
-#define BLYNK_DEFAULT_PORT       80
-#define BLYNK_DEFAULT_PORT_SSL   443
+// Server used when begin()/config() get no server.
+// Define any of these before including the Blynk header to override them.
+// The ports are the hardware ports of blynk-server 0.41.x and 0.50.x:
+// 8080 plain TCP (http.port), 9443 TLS (https.port).
+#ifndef BLYNK_DEFAULT_DOMAIN
+#define BLYNK_DEFAULT_DOMAIN     "myserver.example.com"
+#endif
+#ifndef BLYNK_DEFAULT_PORT
+#define BLYNK_DEFAULT_PORT       8080
+#endif
+#ifndef BLYNK_DEFAULT_PORT_SSL
+#define BLYNK_DEFAULT_PORT_SSL   9443
+#endif
 
 /***************************************************
  * Professional settings

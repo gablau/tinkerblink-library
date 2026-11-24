@@ -46,7 +46,7 @@ const char auth[] = "YourAuthToken";
 Stream* stream = &Serial1;
 
 // Blynk cloud server
-const char* host = "blynk-cloud.com";
+const char* host = "myserver.example.com";
 
 bool gprsInit();
 bool gprsConnect();

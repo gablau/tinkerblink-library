@@ -36,7 +36,7 @@ const ConfigStore configDefault = {
   "",
   
   "invalid token",
-  "blynk-cloud.com", 80,
+  "myserver.example.com", 8080,
   0
 };
 
