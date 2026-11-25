@@ -89,6 +89,110 @@ jobs:
               - examples/Boards_WiFi/ESP32_WiFi
               - examples/Boards_WiFi/ESP32_WiFi_SSL
 
+          - name: LOLIN S2 Mini (ESP32-S2)
+            fqbn: esp32:esp32:lolin_s2_mini
+            platforms: |
+              - name: esp32:esp32
+                source-url: https://espressif.github.io/arduino-esp32/package_esp32_index.json
+            libraries: |
+              - source-path: ./
+            sketch-paths: |
+              - examples/Boards_WiFi/ESP32_WiFi
+              - examples/Boards_WiFi/ESP32_WiFi_SSL
+
+          - name: ESP32-S3
+            fqbn: esp32:esp32:esp32s3
+            platforms: |
+              - name: esp32:esp32
+                source-url: https://espressif.github.io/arduino-esp32/package_esp32_index.json
+            libraries: |
+              - source-path: ./
+            sketch-paths: |
+              - examples/Boards_WiFi/ESP32_WiFi
+              - examples/Boards_WiFi/ESP32_WiFi_SSL
+
+          - name: ESP32-C3 SuperMini
+            fqbn: esp32:esp32:nologo_esp32c3_super_mini
+            platforms: |
+              - name: esp32:esp32
+                source-url: https://espressif.github.io/arduino-esp32/package_esp32_index.json
+            libraries: |
+              - source-path: ./
+            sketch-paths: |
+              - examples/Boards_WiFi/ESP32_WiFi
+              - examples/Boards_WiFi/ESP32_WiFi_SSL
+
+          - name: ESP32-C6
+            fqbn: esp32:esp32:esp32c6
+            platforms: |
+              - name: esp32:esp32
+                source-url: https://espressif.github.io/arduino-esp32/package_esp32_index.json
+            libraries: |
+              - source-path: ./
+            sketch-paths: |
+              - examples/Boards_WiFi/ESP32_WiFi
+              - examples/Boards_WiFi/ESP32_WiFi_SSL
+
+          - name: Arduino Nano ESP32
+            fqbn: arduino:esp32:nano_nora
+            platforms: |
+              - name: arduino:esp32
+            libraries: |
+              - source-path: ./
+            sketch-paths: |
+              - examples/Boards_WiFi/ESP32_WiFi
+              - examples/Boards_WiFi/ESP32_WiFi_SSL
+
+          - name: Arduino UNO R4 WiFi
+            fqbn: arduino:renesas_uno:unor4wifi
+            platforms: |
+              - name: arduino:renesas_uno
+            libraries: |
+              - source-path: ./
+            sketch-paths: |
+              - examples/Boards_WiFi/Arduino_UNO_R4_WiFi
+
+          - name: Arduino GIGA R1 WiFi
+            fqbn: arduino:mbed_giga:giga
+            platforms: |
+              - name: arduino:mbed_giga
+            libraries: |
+              - source-path: ./
+            sketch-paths: |
+              - examples/Boards_WiFi/Arduino_GIGA_R1_WiFi
+
+          - name: Arduino Nano RP2040 Connect
+            fqbn: arduino:mbed_nano:nanorp2040connect
+            platforms: |
+              - name: arduino:mbed_nano
+            libraries: |
+              - source-path: ./
+              - name: WiFiNINA
+            sketch-paths: |
+              - examples/Boards_WiFi/Arduino_Nano_RP2040_Connect
+
+          - name: Raspberry Pi Pico W
+            fqbn: rp2040:rp2040:rpipicow
+            platforms: |
+              - name: rp2040:rp2040
+                source-url: https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
+            libraries: |
+              - source-path: ./
+            sketch-paths: |
+              - examples/Boards_WiFi/RaspberryPi_Pico_W
+              - examples/Boards_WiFi/RaspberryPi_Pico_W_SSL
+
+          - name: Raspberry Pi Pico 2 W
+            fqbn: rp2040:rp2040:rpipico2w
+            platforms: |
+              - name: rp2040:rp2040
+                source-url: https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
+            libraries: |
+              - source-path: ./
+            sketch-paths: |
+              - examples/Boards_WiFi/RaspberryPi_Pico_W
+              - examples/Boards_WiFi/RaspberryPi_Pico_W_SSL
+
     steps:
       - uses: actions/checkout@v5
       - uses: arduino/compile-sketches@v1

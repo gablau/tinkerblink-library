@@ -4,6 +4,23 @@
 
 First release of TinkerBlink Library, based on the Blynk library 0.6.1 (Legacy).
 
+### New boards
+
+- Raspberry Pi Pico W and Pico 2 W (arduino-pico core): `BlynkSimplePicoW.h`, and
+  `BlynkSimplePicoW_SSL.h` with the same TLS options as ESP8266.
+- Arduino UNO R4 WiFi: `BlynkSimpleWiFiS3.h` (`BLYNK_USE_SSL` for TLS through the WiFi module).
+- Arduino GIGA R1 WiFi and the other Arduino mbed boards with WiFi (Portenta H7, Nicla Vision,
+  Opta WiFi): `BlynkSimpleMbedWiFi.h`. The Arduino mbed cores are no longer taken for plain mbed OS.
+- Arduino Nano RP2040 Connect: example with WiFiNINA.
+- ESP32-S2, S3, C3, C6 and Arduino Nano ESP32 with `BlynkSimpleEsp32.h`; on the Nano ESP32 the
+  Bridge widget and analog pin names build with the core pin remapping.
+- New examples in `Boards_WiFi` for each of them.
+- The board name sent to the server (`dev`) recognizes these boards and the LOLIN ESP32 boards,
+  with the names of tinkerblink-boards (e.g. "Raspberry Pi Pico W", "LOLIN S2 Mini",
+  "ESP32-C3 SuperMini"); other ESP32 chips report "ESP32-S2", "ESP32-S3", "ESP32-C3", "ESP32-C6".
+- Analog write (PWM) from the app works on ESP32 with Arduino core 2.0.1 or newer; 0.6.1 ignored it
+  on every ESP32.
+
 ### Security
 
 - CVE-2019-5065 (TALOS-2019-0854): the host name of a server redirect is always terminated; its
@@ -37,8 +54,9 @@ First release of TinkerBlink Library, based on the Blynk library 0.6.1 (Legacy).
 - Examples use `myserver.example.com` instead of `blynk-cloud.com`.
 - Library name "TinkerBlink Library", version 0.7.0 (also reported to the server as `ver`). The
   banner printed on the serial log at start shows the TinkerBlink logo.
-- Builds checked by GitHub Actions on AVR, ESP8266 (cores 2.7.4 and 3.x) and ESP32 (cores 2.0 and
-  3.x).
+- Builds checked by GitHub Actions on AVR, ESP8266 (cores 2.7.4 and 3.x), ESP32 (cores 2.0 and 3.x;
+  ESP32-S2, S3, C3, C6, Nano ESP32), Raspberry Pi Pico W and Pico 2 W, UNO R4 WiFi, GIGA R1 WiFi
+  and Nano RP2040 Connect.
 
 ### Upgrading from 0.6.1
 

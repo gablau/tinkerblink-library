@@ -24,7 +24,7 @@ self-hosted Blynk Legacy servers, whose widget docs link to the examples here.
 - [Installation](#installation)
 - [Quick start](#quick-start)
 - [Server address and ports](#server-address-and-ports)
-- [TLS on ESP8266 and ESP32](#tls-on-esp8266-and-esp32)
+- [TLS on ESP8266, ESP32 and Pico W](#tls-on-esp8266-esp32-and-pico-w)
 - [Examples](#examples)
 - [Supported hardware](#supported-hardware)
 - [Related projects](#related-projects)
@@ -41,7 +41,7 @@ self-hosted Blynk Legacy servers, whose widget docs link to the examples here.
     sketches already do) or define it once, see [below](#server-address-and-ports);
   - the default ports are the ones of blynk-server, 8080 and 9443, instead of 80 and 443;
   - with TLS on ESP8266 and ESP32 the default trusted CA is ISRG Root X1 (Let's Encrypt); a server
-    with its own or self-signed certificate needs one line, see [TLS](#tls-on-esp8266-and-esp32).
+    with its own or self-signed certificate needs one line, see [TLS](#tls-on-esp8266-esp32-and-pico-w).
 
 ## Installation
 
@@ -120,9 +120,9 @@ then `Blynk.begin(auth, ssid, pass)` uses it:
 
 An IP address works too: `Blynk.begin(auth, ssid, pass, IPAddress(192,168,1,100), 8080)`.
 
-## TLS on ESP8266 and ESP32
+## TLS on ESP8266, ESP32 and Pico W
 
-Use `BlynkSimpleEsp8266_SSL.h` or `BlynkSimpleEsp32_SSL.h` and port 9443. By default the server
+Use `BlynkSimpleEsp8266_SSL.h`, `BlynkSimpleEsp32_SSL.h` or `BlynkSimplePicoW_SSL.h` and port 9443. By default the server
 certificate must chain to **ISRG Root X1**, so a server with a Let's Encrypt certificate works with
 no extra code. For other servers pick one mode, either with a call before `Blynk.begin()` or with a
 define before the include:
@@ -145,8 +145,8 @@ define before the include:
   )EOF";
   ```
 
-- The fingerprint is **SHA-1 on ESP8266** and **SHA-256 on ESP32**, in hex, with or without spaces
-  or colons. To read it from the server:
+- The fingerprint is **SHA-1 on ESP8266 and Pico W** and **SHA-256 on ESP32**, in hex, with or
+  without spaces or colons. To read it from the server:
 
   ```sh
   openssl s_client -connect myserver.example.com:9443 </dev/null 2>/dev/null \
@@ -156,15 +156,17 @@ define before the include:
   A fingerprint changes every time the certificate is renewed (every 90 days with Let's Encrypt).
 
 - With a CA, the certificate must be valid for the server name used in `Blynk.begin()`.
-- On ESP8266 the CA mode first sets the clock via NTP (`pool.ntp.org`, `time.nist.gov`), to check
+- On ESP8266 and Pico W the CA mode first sets the clock via NTP (`pool.ntp.org`, `time.nist.gov`), to check
   the certificate dates. `BLYNK_SSL_NTP_SERVER1`, `BLYNK_SSL_NTP_SERVER2` and
   `BLYNK_SSL_NTP_TIMEOUT_MS` change servers and timeout.
 - TLS on ESP8266 needs ESP8266 Arduino core 2.5.0 or newer (BearSSL) and about 25 KB of free heap.
 - The certificate built into blynk-server is meant for testing only: give the server a real one
   (see its README), or at least pin its fingerprint.
 
-Other boards with TLS (WiFiNINA, MKR1000, Ethernet SSL) verify the server with the certificates
-stored in their WiFi module or library, as in 0.6.1.
+On the Arduino UNO R4 WiFi define `BLYNK_USE_SSL` before including `BlynkSimpleWiFiS3.h`: its WiFi
+module checks the server with its own root CA list, Let's Encrypt included. Other boards with TLS
+(WiFiNINA, MKR1000, Ethernet SSL) verify the server with the certificates stored in their WiFi
+module or library, as in 0.6.1.
 
 ## Examples
 
@@ -177,12 +179,24 @@ The widget docs of the TinkerBlink app link to the sketches in `GettingStarted`,
 
 ## Supported hardware
 
-The boards and connections of 0.6.1: ESP8266 and ESP32 (WiFi, BLE, Bluetooth), Arduino boards with
-Ethernet, WiFi, WiFiNINA, WiFi101 and GSM shields or modules (TinyGSM), Serial and USB links, BLE
-modules, Particle, Energia, Raspberry Pi and Linux (see [linux](linux)).
+WiFi boards and the header to include:
 
-Support for newer boards (Raspberry Pi Pico W, Arduino UNO R4 WiFi, ESP32-S2/S3/C3/C6, Nano ESP32,
-GIGA R1 WiFi) is planned.
+| Boards | Header | Example in `Boards_WiFi` |
+|--------|--------|--------------------------|
+| ESP8266 | `BlynkSimpleEsp8266.h`, `BlynkSimpleEsp8266_SSL.h` | `ESP8266_Standalone`, `ESP8266_Standalone_SSL` |
+| ESP32, ESP32-S2, S3, C3, C6, Arduino Nano ESP32 | `BlynkSimpleEsp32.h`, `BlynkSimpleEsp32_SSL.h` | `ESP32_WiFi`, `ESP32_WiFi_SSL` |
+| Raspberry Pi Pico W, Pico 2 W ([arduino-pico](https://github.com/earlephilhower/arduino-pico) core) | `BlynkSimplePicoW.h`, `BlynkSimplePicoW_SSL.h` | `RaspberryPi_Pico_W`, `RaspberryPi_Pico_W_SSL` |
+| Arduino UNO R4 WiFi | `BlynkSimpleWiFiS3.h` | `Arduino_UNO_R4_WiFi` |
+| Arduino GIGA R1 WiFi, Portenta H7, Nicla Vision, Opta WiFi | `BlynkSimpleMbedWiFi.h` | `Arduino_GIGA_R1_WiFi` |
+| Arduino Nano RP2040 Connect, Nano 33 IoT, MKR WiFi 1010, UNO WiFi Rev2 | `BlynkSimpleWiFiNINA.h` | `Arduino_Nano_RP2040_Connect`, `Arduino_MKR1010` |
+
+The other boards and connections of 0.6.1 work as before: Arduino boards with Ethernet, WiFi101 and
+GSM shields or modules (TinyGSM), ESP32 BLE and Bluetooth, Serial and USB links, BLE modules,
+Particle, Energia, Raspberry Pi and Linux (see [linux](linux)).
+
+For the boards added in 0.7.0 (Pico W, Pico 2 W, UNO R4, GIGA R1 WiFi, Nano RP2040 Connect, Nano
+ESP32, the ESP32-S2/S3/C3/C6 and LOLIN boards) the board name sent to the server (`dev`) is the one
+used by [tinkerblink-boards](https://github.com/gablau/tinkerblink-boards).
 
 ## Related projects
 
@@ -198,7 +212,7 @@ GIGA R1 WiFi) is planned.
 
 Bug reports and pull requests are welcome. The library must keep working with blynk-server 0.41.x
 and 0.50.x: a change to what the board sends needs a check against the server sources. Every push
-is built by [GitHub Actions](.github/workflows/build.yml) on AVR, ESP8266 and ESP32.
+is built by [GitHub Actions](.github/workflows/build.yml) on AVR, ESP8266, ESP32, RP2040, Renesas and mbed boards.
 
 ## License
 
