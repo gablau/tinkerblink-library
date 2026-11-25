@@ -105,7 +105,7 @@ for x in fqbns:
 
 logfile = open("./build.log","wb")
 datafile = os.path.abspath('./extras/all-boards.json')
-fn = os.path.abspath('./tests/BlynkBuildTest/BlynkBuildTest.ino')
+fn = os.path.abspath('./extras/tests/BlynkBuildTest/BlynkBuildTest.ino')
 
 try:
     with open(datafile, 'r') as fp:

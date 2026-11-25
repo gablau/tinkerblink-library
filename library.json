@@ -26,8 +26,7 @@
     "exclude": [
       ".github",
       "linux",
-      "extras",
-      "tests"
+      "extras"
     ]
   },
   "frameworks": "*",
