@@ -67,7 +67,13 @@ void BlynkApi<Proto>::sendInfo()
 
 
 // Check if analog pins can be referenced by name on this device
-#if defined(analogInputToDigitalPin)
+#if defined(BOARD_HAS_PIN_REMAP) && !defined(BOARD_USES_HW_GPIO_NUMBERS) && defined(NUM_ANALOG_INPUTS)
+    // Arduino Nano ESP32 with Arduino pin numbering: A0..A7 are consecutive
+    // pin numbers, and analogInputToDigitalPin() does not build there
+    // (ESP32 core 2.0.x). The core remaps the pin when it is used.
+    #define BLYNK_DECODE_PIN(it) (((it).asStr()[0] == 'A') ? \
+        ((atoi((it).asStr()+1) < NUM_ANALOG_INPUTS) ? (A0 + atoi((it).asStr()+1)) : -1) : (it).asInt())
+#elif defined(analogInputToDigitalPin)
     #define BLYNK_DECODE_PIN(it) (((it).asStr()[0] == 'A') ? analogInputToDigitalPin(atoi((it).asStr()+1)) : (it).asInt())
 #else
     #define BLYNK_DECODE_PIN(it) ((it).asInt())
@@ -152,8 +158,18 @@ void BlynkApi<Proto>::processCmd(const void* buff, size_t len)
         static_cast<Proto*>(this)->sendCmd(BLYNK_CMD_HARDWARE, 0, rsp.getBuffer(), rsp.getLength()-1);
     } break;
 
-// TODO: Remove workaround for ESP32
-#if !defined(ESP32)
+// ESP32: analogWrite() exists from Arduino core 2.0.1 (LEDC based)
+#if defined(ESP32)
+  #if defined(ESP_ARDUINO_VERSION) && defined(ESP_ARDUINO_VERSION_VAL)
+    #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(2, 0, 1)
+      #define BLYNK_HAS_ANALOG_WRITE
+    #endif
+  #endif
+#else
+  #define BLYNK_HAS_ANALOG_WRITE
+#endif
+
+#if defined(BLYNK_HAS_ANALOG_WRITE)
 
     case BLYNK_HW_AW: {
         // Should be 1 parameter (value)
@@ -166,7 +182,7 @@ void BlynkApi<Proto>::processCmd(const void* buff, size_t len)
         analogWrite(pin, it.asInt());
     } break;
 
-#endif // TODO: Remove workaround for ESP32
+#endif // BLYNK_HAS_ANALOG_WRITE
 
 #endif
 

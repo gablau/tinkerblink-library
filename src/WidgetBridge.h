@@ -13,6 +13,16 @@
 
 #include <Blynk/BlynkWidgetBase.h>
 
+// Arduino Nano ESP32 (and other boards with BOARD_HAS_PIN_REMAP) turn
+// digitalWrite/analogWrite into function-like macros: keep them out of
+// the method names below. Calls in a sketch still go through the macro,
+// which remaps the pin number with the local board table: there write
+// (bridge.digitalWrite)(pin, value) to send the pin unchanged.
+#pragma push_macro("digitalWrite")
+#pragma push_macro("analogWrite")
+#undef digitalWrite
+#undef analogWrite
+
 class WidgetBridge
     : private BlynkWidgetBase
 {
@@ -77,5 +87,8 @@ public:
     }
 
 };
+
+#pragma pop_macro("analogWrite")
+#pragma pop_macro("digitalWrite")
 
 #endif
