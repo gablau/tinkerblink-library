@@ -18,6 +18,7 @@
 
  *************************************************************
   This example runs directly on ESP32 chip.
+  It works on ESP32-S2, S3, C3, C6 and Arduino Nano ESP32 too.
 
   Note: This requires ESP32 support package:
     https://github.com/espressif/arduino-esp32

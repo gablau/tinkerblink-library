@@ -62,7 +62,8 @@
 #define BLYNK_MAX_SENDBYTES  128
 #endif
 
-// TLS server verification (BlynkSimpleEsp8266_SSL.h, BlynkSimpleEsp32_SSL.h).
+// TLS server verification (BlynkSimpleEsp8266_SSL.h, BlynkSimpleEsp32_SSL.h,
+// BlynkSimplePicoW_SSL.h).
 // By default the server certificate must chain to ISRG Root X1
 // (Let's Encrypt). Define one of these before including the header
 // (or call Blynk.setRootCA/setFingerprint/setInsecure before begin()):
@@ -71,7 +72,7 @@
 // declared before the include:
 //#define BLYNK_SSL_ROOT_CA my_root_ca_pem
 //
-// Pin the server certificate (ESP8266: SHA-1, ESP32: SHA-256, hex):
+// Pin the server certificate (ESP8266, Pico W: SHA-1; ESP32: SHA-256; hex):
 //#define BLYNK_SSL_FINGERPRINT "AA:BB:..."
 //
 // Encrypt without verifying the server (testing only):
