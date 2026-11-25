@@ -1,22 +1,30 @@
 {
-  "name": "Blynk",
-  "version": "0.6.1",
-  "description": "Build a smartphone app for your project in minutes. Blynk allows creating IoT solutions easily. It supports  WiFi, BLE, Bluetooth, Ethernet, GSM, USB, Serial. Works with many boards like ESP8266, ESP32, Arduino UNO, Nano, Due, Mega, Zero, MKR100, Yun, Raspberry Pi, Particle, Energia, ARM mbed, Intel Edison/Galileo/Joule, BBC micro:bit, DFRobot, RedBearLab, Microduino, LinkIt ONE ...",
-  "keywords": "sensors, control, device, smartphone, mobile, app, web, cloud, communication, protocol, iot, m2m, wifi, ble, bluetooth, ethernet, usb, serial, gsm, gprs, 3g, data, esp8266, http",
+  "name": "TinkerBlink Library",
+  "version": "0.7.0",
+  "description": "Arduino/C++ library for self-hosted Blynk Legacy servers (blynk-server 0.41.x and the 0.50.x fork). Maintained continuation of the Blynk library 0.6.1 for ESP8266, ESP32, Arduino and more, over WiFi, Ethernet, GSM, BLE, Bluetooth and Serial. Companion of the TinkerBlink app. Not affiliated with Blynk Inc.",
+  "keywords": "blynk, blynk-legacy, tinkerblink, iot, control, device, smartphone, app, protocol, wifi, ethernet, gsm, ble, bluetooth, serial, esp8266, esp32",
   "authors":
-  {
-    "name":  "Volodymyr Shymanskyy",
-    "url":   "https://github.com/vshymanskyy",
-    "maintainer": true
-  },
+  [
+    {
+      "name": "Gabriele Lauricella",
+      "url": "https://github.com/gablau",
+      "maintainer": true
+    },
+    {
+      "name": "Volodymyr Shymanskyy",
+      "url": "https://github.com/vshymanskyy"
+    }
+  ],
+  "license": "MIT",
   "repository":
   {
     "type": "git",
-    "url": "https://github.com/blynkkk/blynk-library.git"
+    "url": "https://github.com/gablau/tinkerblink-library.git"
   },
-  "homepage": "http://blynk.cc",
+  "homepage": "https://github.com/gablau/tinkerblink-library",
   "export": {
     "exclude": [
+      ".github",
       "linux",
       "extras",
       "tests"

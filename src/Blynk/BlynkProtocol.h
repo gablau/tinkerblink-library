@@ -85,14 +85,14 @@ public:
 
     void printBanner() {
 #if defined(BLYNK_NO_FANCY_LOGO)
-        BLYNK_LOG1(BLYNK_F("Blynk v" BLYNK_VERSION " on " BLYNK_INFO_DEVICE));
+        BLYNK_LOG1(BLYNK_F("TinkerBlink Library v" BLYNK_VERSION " on " BLYNK_INFO_DEVICE));
 #else
         BLYNK_LOG1(BLYNK_F(BLYNK_NEWLINE
-            "    ___  __          __" BLYNK_NEWLINE
-            "   / _ )/ /_ _____  / /__" BLYNK_NEWLINE
-            "  / _  / / // / _ \\/  '_/" BLYNK_NEWLINE
-            " /____/_/\\_, /_//_/_/\\_\\" BLYNK_NEWLINE
-            "        /___/ v" BLYNK_VERSION " on " BLYNK_INFO_DEVICE BLYNK_NEWLINE
+            "  ______ _      __            ___   __ _      __" BLYNK_NEWLINE
+            " /_  __/(_)__  / /_____  ____/ _ ) / /(_)__  / /__" BLYNK_NEWLINE
+            "  / /  / / _ \\/  '_/ -_)/ __/ _  |/ // / _ \\/  '_/" BLYNK_NEWLINE
+            " /_/  /_/_//_/_/\\_\\\\__//_/ /____//_//_/_//_/_/\\_\\" BLYNK_NEWLINE
+            "  Library v" BLYNK_VERSION " on " BLYNK_INFO_DEVICE BLYNK_NEWLINE
         ));
 #endif
     }
