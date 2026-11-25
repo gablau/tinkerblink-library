@@ -144,7 +144,7 @@
     #define _BLYNK_USE_DEFAULT_MILLIS
     #define _BLYNK_USE_DEFAULT_DELAY
 
-#elif defined(__MBED__)
+#elif defined(__MBED__) && !defined(ARDUINO)
 
     #include "mbed.h"
 

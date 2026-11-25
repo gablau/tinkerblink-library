@@ -158,7 +158,7 @@
         #define BLYNK_INFO_DEVICE  "Particle"
         #endif
 
-    #elif defined(__MBED__)
+    #elif defined(__MBED__) && !defined(ARDUINO)
 
         #define BLYNK_INFO_DEVICE  "MBED"
         #define BLYNK_USE_128_VPINS
@@ -221,7 +221,9 @@
 
     #elif defined(ARDUINO)
 
-        #if defined(ARDUINO_ARCH_SAMD) || defined(ESP32) || defined(ESP8266)
+        #if defined(ARDUINO_ARCH_SAMD) || defined(ESP32) || defined(ESP8266) || \
+            defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_ARCH_RENESAS) || \
+            defined(ARDUINO_GIGA)
             #define BLYNK_USE_128_VPINS
             #define BLYNK_BUFFERS_SIZE 1024
         #endif
@@ -300,6 +302,26 @@
         #elif defined(ARDUINO_SAMD_MKRVIDOR4000)
         #define BLYNK_INFO_DEVICE  "MKR Vidor 4000"
 
+        /* Arduino Renesas (names as in tinkerblink-boards) */
+        #elif defined(ARDUINO_UNOWIFIR4)
+        #define BLYNK_INFO_DEVICE  "Arduino UNO R4 WiFi"
+        #elif defined(ARDUINO_MINIMA)
+        #define BLYNK_INFO_DEVICE  "Arduino UNO R4 Minima"
+
+        /* Arduino mbed */
+        #elif defined(ARDUINO_GIGA)
+        #define BLYNK_INFO_DEVICE  "Arduino GIGA R1 WiFi"
+        #elif defined(ARDUINO_NANO_RP2040_CONNECT)
+        #define BLYNK_INFO_DEVICE  "Arduino Nano RP2040 Connect"
+
+        /* Raspberry Pi RP2040 / RP2350 (arduino-pico core) */
+        #elif defined(ARDUINO_RASPBERRY_PI_PICO_2W)
+        #define BLYNK_INFO_DEVICE  "Raspberry Pi Pico 2 W"
+        #elif defined(ARDUINO_RASPBERRY_PI_PICO_W)
+        #define BLYNK_INFO_DEVICE  "Raspberry Pi Pico W"
+        #elif defined(ARDUINO_ARCH_RP2040)
+        #define BLYNK_INFO_DEVICE  "RP2040"
+
         /* Intel */
         #elif defined(ARDUINO_GALILEO)
         #define BLYNK_INFO_DEVICE  "Galileo"
@@ -342,7 +364,47 @@
         #elif defined(ARDUINO_ARCH_ESP8266)
         #define BLYNK_INFO_DEVICE  "ESP8266"
 
-        /* ESP32 */
+        /* ESP32 boards (names as in tinkerblink-boards) */
+        #elif defined(ARDUINO_NANO_ESP32)
+        #define BLYNK_INFO_DEVICE  "Arduino Nano ESP32"
+        #elif defined(ARDUINO_LOLIN_D32_PRO)
+        #define BLYNK_INFO_DEVICE  "LOLIN D32 Pro"
+        #elif defined(ARDUINO_LOLIN_D32)
+        #define BLYNK_INFO_DEVICE  "LOLIN D32"
+        #elif defined(ARDUINO_LOLIN_S2_MINI)
+        #define BLYNK_INFO_DEVICE  "LOLIN S2 Mini"
+        #elif defined(ARDUINO_LOLIN_S2_PICO)
+        #define BLYNK_INFO_DEVICE  "LOLIN S2 Pico"
+        #elif defined(ARDUINO_LOLIN_S3_MINI_PRO)
+        #define BLYNK_INFO_DEVICE  "LOLIN S3 Mini Pro"
+        #elif defined(ARDUINO_LOLIN_S3_MINI)
+        #define BLYNK_INFO_DEVICE  "LOLIN S3 Mini"
+        #elif defined(ARDUINO_LOLIN_S3_PRO)
+        #define BLYNK_INFO_DEVICE  "LOLIN S3 Pro"
+        #elif defined(ARDUINO_LOLIN_S3)
+        #define BLYNK_INFO_DEVICE  "LOLIN S3"
+        #elif defined(ARDUINO_LOLIN_C3_MINI)
+        #define BLYNK_INFO_DEVICE  "LOLIN C3 Mini"
+        #elif defined(ARDUINO_LOLIN_C3_PICO)
+        #define BLYNK_INFO_DEVICE  "LOLIN C3 Pico"
+        #elif defined(ARDUINO_NOLOGO_ESP32C3_SUPER_MINI) || defined(ARDUINO_MAKERGO_C3_SUPERMINI)
+        #define BLYNK_INFO_DEVICE  "ESP32-C3 SuperMini"
+        #elif defined(ARDUINO_MAKERGO_C6_SUPERMINI)
+        #define BLYNK_INFO_DEVICE  "ESP32-C6 SuperMini"
+
+        /* ESP32 chips (board not known: e.g. "ESP32S3 Dev Module") */
+        #elif defined(ARDUINO_ESP32S2_DEV) || defined(CONFIG_IDF_TARGET_ESP32S2)
+        #define BLYNK_INFO_DEVICE  "ESP32-S2"
+        #elif defined(ARDUINO_ESP32S3_DEV) || defined(CONFIG_IDF_TARGET_ESP32S3)
+        #define BLYNK_INFO_DEVICE  "ESP32-S3"
+        #elif defined(ARDUINO_ESP32C2_DEV) || defined(CONFIG_IDF_TARGET_ESP32C2)
+        #define BLYNK_INFO_DEVICE  "ESP32-C2"
+        #elif defined(ARDUINO_ESP32C3_DEV) || defined(CONFIG_IDF_TARGET_ESP32C3)
+        #define BLYNK_INFO_DEVICE  "ESP32-C3"
+        #elif defined(ARDUINO_ESP32C5_DEV) || defined(CONFIG_IDF_TARGET_ESP32C5)
+        #define BLYNK_INFO_DEVICE  "ESP32-C5"
+        #elif defined(ARDUINO_ESP32C6_DEV) || defined(CONFIG_IDF_TARGET_ESP32C6)
+        #define BLYNK_INFO_DEVICE  "ESP32-C6"
         #elif defined(ARDUINO_ARCH_ESP32)
         #define BLYNK_INFO_DEVICE  "ESP32"
 

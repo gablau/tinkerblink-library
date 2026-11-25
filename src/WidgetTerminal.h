@@ -10,7 +10,7 @@
 #ifndef WidgetTerminal_h
 #define WidgetTerminal_h
 
-#if defined(ARDUINO) && !(defined(LINUX) || defined(__MBED__))
+#if defined(ARDUINO) && !defined(LINUX)
     #define BLYNK_USE_PRINT_CLASS
 #elif defined(SPARK) || defined(PARTICLE)
     #define BLYNK_USE_PRINT_CLASS
