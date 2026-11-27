@@ -1,19 +1,12 @@
 /*************************************************************
-  Blynk is a platform with iOS and Android apps to control
-  Arduino, Raspberry Pi and the likes over the Internet.
-  You can easily build graphic interfaces for all your
-  projects by simply dragging and dropping widgets.
-
-    Downloads, docs, tutorials: http://www.blynk.cc
-    Sketch generator:           http://examples.blynk.cc
-    Blynk community:            http://community.blynk.cc
-    Follow us:                  http://www.fb.com/blynkapp
-                                http://twitter.com/blynk_app
+  TinkerBlink Library: https://github.com/gablau/tinkerblink-library
+  Connects your board to a self-hosted Blynk Legacy server
+  (blynk-server 0.41.x and 0.50.x).
 
   This example code is in public domain.
 
  *************************************************************
-  Project setup in the Blynk app:
+  Project setup in the app:
     Value Display widget on V2
 
   Attention!
@@ -30,7 +23,7 @@
 
  *************************************************************/
 
-// You should get Auth Token in the Blynk App.
+// You should get Auth Token in the app.
 // Go to the Project Settings (nut icon).
 const char auth[] = "YourAuthToken";
 

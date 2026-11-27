@@ -1,16 +1,8 @@
 /*************************************************************
-  Blynk is a platform with iOS and Android apps to control
-  Arduino, Raspberry Pi and the likes over the Internet.
-  You can easily build graphic interfaces for all your
-  projects by simply dragging and dropping widgets.
+  TinkerBlink Library: https://github.com/gablau/tinkerblink-library
+  Connects your board to a self-hosted Blynk Legacy server
+  (blynk-server 0.41.x and 0.50.x).
 
-    Downloads, docs, tutorials: http://www.blynk.cc
-    Sketch generator:           http://examples.blynk.cc
-    Blynk community:            http://community.blynk.cc
-    Social networks:            http://www.fb.com/blynkapp
-                                http://twitter.com/blynk_app
-
-  Blynk library is licensed under MIT license
   This example code is in public domain.
 
  *************************************************************
@@ -37,7 +29,7 @@ SoftwareSerial DebugSerial(2, 3); // RX, TX
 #define BLYNK_PRINT DebugSerial
 #include <BlynkSimpleSerialBLE.h>
 
-// You should get Auth Token in the Blynk App.
+// You should get Auth Token in the app.
 // Go to the Project Settings (nut icon).
 char auth[] = "YourAuthToken";
 

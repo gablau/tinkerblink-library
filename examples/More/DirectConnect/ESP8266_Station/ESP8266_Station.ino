@@ -1,19 +1,12 @@
 /*************************************************************
-  Blynk is a platform with iOS and Android apps to control
-  Arduino, Raspberry Pi and the likes over the Internet.
-  You can easily build graphic interfaces for all your
-  projects by simply dragging and dropping widgets.
+  TinkerBlink Library: https://github.com/gablau/tinkerblink-library
+  Connects your board to a self-hosted Blynk Legacy server
+  (blynk-server 0.41.x and 0.50.x).
 
-    Downloads, docs, tutorials: http://www.blynk.cc
-    Sketch generator:           http://examples.blynk.cc
-    Blynk community:            http://community.blynk.cc
-    Follow us:                  http://www.fb.com/blynkapp
-                                http://twitter.com/blynk_app
-
-  Blynk library is licensed under MIT license
   This example code is in public domain.
+
  *************************************************************
-  This sketch shows how to connect to your ESP8266 directly from Blynk App
+  This sketch shows how to connect to your ESP8266 directly from the app
 
   NOTE: This requires ESP8266 support package:
        https://github.com/esp8266/Arduino
@@ -31,7 +24,7 @@
 #include <ESP8266WebServer.h>
 #include <BlynkSimpleStream.h>
 
-// You should get Auth Token in the Blynk App.
+// You should get Auth Token in the app.
 // Go to the Project Settings (nut icon).
 char auth[] = "YourAuthToken";
 

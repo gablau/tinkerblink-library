@@ -1,24 +1,14 @@
 /*************************************************************
-  Download latest Blynk library here:
-    https://github.com/blynkkk/blynk-library/releases/latest
+  TinkerBlink Library: https://github.com/gablau/tinkerblink-library
+  Connects your board to a self-hosted Blynk Legacy server
+  (blynk-server 0.41.x and 0.50.x).
 
-  Blynk lets you create beautiful drag-and-drop visual interfaces
-  for your projects in 5 minutes. And it works with almost every
-  hardware out there.
-
-    Downloads, docs, tutorials: http://www.blynk.cc
-    Sketch generator:           http://examples.blynk.cc
-    Blynk community:            http://community.blynk.cc
-    Follow us:                  http://www.fb.com/blynkapp
-                                http://twitter.com/blynk_app
-
-  Blynk library is licensed under MIT license
   This example code is in public domain.
 
  *************************************************************
 
   You’ll need:
-   - Blynk App (download from AppStore or Google Play)
+   - the TinkerBlink app, or another Blynk Legacy app
    - Arduino UNO or similar microcontroller board
    - Decide how to connect to Blynk
      (USB, Ethernet, Wi-Fi, Bluetooth, ...)
@@ -38,7 +28,7 @@
   1. Connect LED to Pin 9
   ( http://arduino.cc/en/uploads/Tutorial/simplefade_bb.png )
 
- In the Blynk App:
+ In the app:
   2. Create New Project
   3. Email yourself Auth Token. You can do it later at any time
   4. Add a Button Widget. Select Pin D9 in Widget's Settings
@@ -57,7 +47,7 @@
 #include <Ethernet.h>
 #include <BlynkSimpleEthernet.h>
 
-// You should get Auth Token in the Blynk App.
+// You should get Auth Token in the app.
 // Go to the Project Settings (nut icon).
 char auth[] = "YourAuthToken";
 

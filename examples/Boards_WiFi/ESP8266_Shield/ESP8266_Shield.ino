@@ -1,19 +1,8 @@
 /*************************************************************
-  Download latest Blynk library here:
-    https://github.com/blynkkk/blynk-library/releases/latest
+  TinkerBlink Library: https://github.com/gablau/tinkerblink-library
+  Connects your board to a self-hosted Blynk Legacy server
+  (blynk-server 0.41.x and 0.50.x).
 
-  Blynk is a platform with iOS and Android apps to control
-  Arduino, Raspberry Pi and the likes over the Internet.
-  You can easily build graphic interfaces for all your
-  projects by simply dragging and dropping widgets.
-
-    Downloads, docs, tutorials: http://www.blynk.cc
-    Sketch generator:           http://examples.blynk.cc
-    Blynk community:            http://community.blynk.cc
-    Follow us:                  http://www.fb.com/blynkapp
-                                http://twitter.com/blynk_app
-
-  Blynk library is licensed under MIT license
   This example code is in public domain.
 
  *************************************************************
@@ -22,8 +11,11 @@
   to connect your project to Blynk.
 
   WARNING!
-    It's very tricky to get it working. Please read this article:
-    http://help.blynk.cc/hardware-and-libraries/arduino/esp8266-with-at-firmware
+    It's very tricky to get it working:
+    - the ESP8266 needs the AT firmware (1.x);
+    - ESP8266_BAUD must match the baud rate of the module;
+      with SoftwareSerial set the module to 9600 first (AT+UART_DEF);
+    - power it from a 3.3V supply able to give 300 mA or more.
 
   Change WiFi ssid, pass, and Blynk auth token to run :)
   Feel free to apply it to any other example. It's simple!
@@ -36,7 +28,7 @@
 #include <ESP8266_Lib.h>
 #include <BlynkSimpleShieldEsp8266.h>
 
-// You should get Auth Token in the Blynk App.
+// You should get Auth Token in the app.
 // Go to the Project Settings (nut icon).
 char auth[] = "YourAuthToken";
 

@@ -1,26 +1,15 @@
 /*************************************************************
-  Download latest Blynk library here:
-    https://github.com/blynkkk/blynk-library/releases/latest
+  TinkerBlink Library: https://github.com/gablau/tinkerblink-library
+  Connects your board to a self-hosted Blynk Legacy server
+  (blynk-server 0.41.x and 0.50.x).
 
-  Blynk is a platform with iOS and Android apps to control
-  Arduino, Raspberry Pi and the likes over the Internet.
-  You can easily build graphic interfaces for all your
-  projects by simply dragging and dropping widgets.
-
-    Downloads, docs, tutorials: http://www.blynk.cc
-    Sketch generator:           http://examples.blynk.cc
-    Blynk community:            http://community.blynk.cc
-    Follow us:                  http://www.fb.com/blynkapp
-                                http://twitter.com/blynk_app
-
-  Blynk library is licensed under MIT license
   This example code is in public domain.
 
  *************************************************************
 
   You can set predefined properties of any widget. Like color, label
 
-  Project setup in the Blynk app:
+  Project setup in the app:
     Menu Widget on V1 with 2 items
  *************************************************************/
 
@@ -32,7 +21,7 @@
 #include <Ethernet.h>
 #include <BlynkSimpleEthernet.h>
 
-// You should get Auth Token in the Blynk App.
+// You should get Auth Token in the app.
 // Go to the Project Settings (nut icon).
 char auth[] = "YourAuthToken";
 
