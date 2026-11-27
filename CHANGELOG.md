@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.7.0 (unreleased)
+## 0.7.0 (2026-11-27)
 
 First release of TinkerBlink Library, based on the Blynk library 0.6.1 (Legacy).
 
