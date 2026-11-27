@@ -192,7 +192,14 @@ WiFi boards and the header to include:
 
 The other boards and connections of 0.6.1 work as before: Arduino boards with Ethernet, WiFi101 and
 GSM shields or modules (TinyGSM), ESP32 BLE and Bluetooth, Serial and USB links, BLE modules,
-Particle, Energia, Raspberry Pi and Linux (see [linux](linux)).
+Particle, Raspberry Pi and Linux (see [linux](linux): GPIO through libgpiod or WiringPi).
+
+Discontinued hardware: the headers and examples of these boards stay as in 0.6.1, but the boards
+are no longer made or their tools are no longer maintained, and nobody checks them any more:
+Arduino 101, Arduino Yún, Arduino.org UNO WiFi and Ethernet 2, Arduino WiFi Shield, Intel Edison
+and Galileo, TI CC3000 and the Energia boards, LinkIt ONE, LightBlue Bean, RFduino, Simblee,
+RedBearLab BLE Mini, BLE Nano and Blend Micro, RedBear Duo, TheAirBoard, Digistump Oak, WildFire
+V3/V4, chipKIT Uno32, SparkFun Blynk Board. They may be removed in a later version.
 
 For the boards added in 0.7.0 (Pico W, Pico 2 W, UNO R4, GIGA R1 WiFi, Nano RP2040 Connect, Nano
 ESP32, the ESP32-S2/S3/C3/C6 and LOLIN boards) the board name sent to the server (`dev`) is the one

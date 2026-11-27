@@ -22,6 +22,8 @@ First release of TinkerBlink Library, based on the Blynk library 0.6.1 (Legacy).
   on every ESP32.
 - Checked on hardware with blynk-server 0.50: ESP32-S3 SuperMini, LOLIN S2 Mini, ESP32-C3
   SuperMini.
+- Linux client with GPIO through libgpiod (`make target=gpiod`, libgpiod 1.x and 2.x), for the
+  Raspberry Pi OS releases without WiringPi; `make DEVICE="..."` sets the board name.
 
 ### Security
 
@@ -53,15 +55,26 @@ First release of TinkerBlink Library, based on the Blynk library 0.6.1 (Legacy).
   (`Blynk.setRootCA()`, `BLYNK_SSL_ROOT_CA`), a certificate fingerprint (`Blynk.setFingerprint()`,
   `BLYNK_SSL_FINGERPRINT`; SHA-1 on ESP8266, SHA-256 on ESP32) or not at all, for testing
   (`Blynk.setInsecure()`, `BLYNK_SSL_INSECURE`).
-- Examples use `myserver.example.com` instead of `blynk-cloud.com`.
+- Examples use `myserver.example.com` instead of `blynk-cloud.com`, and start with a TinkerBlink
+  header instead of the Blynk one, whose links point to closed sites. Their paths are unchanged.
 - Library name "TinkerBlink Library", version 0.7.0 (also reported to the server as `ver`). The
   banner printed on the serial log at start shows the TinkerBlink logo.
 - Hardware test sketch for ESP32 boards: `extras/tests/HardwareTestEsp32` (connection, virtual
   pins, Terminal, digital and analog write, RGB LED; own settings in an untracked
   `test_settings.h`).
+- Serial gateway (`scripts/blynk-ser.sh`, `blynk-ser.bat`) and `scripts/blynk_ctrl.py` default to
+  `myserver.example.com`, port 8080. `blynk-ser.sh` uses plain TCP by default; with `-t SSL` it
+  verifies the server with `--cert` or the system CA certificates. The expired blynk-cloud.com
+  certificate in `scripts/certs` is removed.
+- Scripts in `extras` and `scripts` run on Python 3; `extras/build-boards.py` and
+  `extras/build-examples.py` build with arduino-cli. The pseudo-servers in `extras/tests` accept
+  the login and the board info of the current library.
+- Removed: the Travis CI configuration and the Java tools for the Arduino IDE 1.x
+  (`extras/ide-tools`).
+- The README lists the discontinued boards whose headers and examples are kept unchecked.
 - Builds checked by GitHub Actions on AVR, ESP8266 (cores 2.7.4 and 3.x), ESP32 (cores 2.0 and 3.x;
-  ESP32-S2, S3, C3, C6, Nano ESP32), Raspberry Pi Pico W and Pico 2 W, UNO R4 WiFi, GIGA R1 WiFi
-  and Nano RP2040 Connect.
+  ESP32-S2, S3, C3, C6, Nano ESP32), Raspberry Pi Pico W and Pico 2 W, UNO R4 WiFi, GIGA R1 WiFi,
+  Nano RP2040 Connect and the Linux client (plain and with libgpiod 1.x and 2.x).
 
 ### Upgrading from 0.6.1
 
