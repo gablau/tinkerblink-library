@@ -1,6 +1,8 @@
 /**
  * @file       BlynkSimpleWiFiS3.h
+ * @author     Gabriele Lauricella
  * @license    This project is released under the MIT License (MIT)
+ * @copyright  Copyright (c) 2026 Gabriele Lauricella
  * @brief      Arduino UNO R4 WiFi (WiFiS3 library)
  *
  * Define BLYNK_USE_SSL before the include to connect over TLS (port 9443):

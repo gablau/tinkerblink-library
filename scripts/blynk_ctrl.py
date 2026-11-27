@@ -23,7 +23,7 @@ examples:
     python blynk_ctrl.py --token=909fa1... --delayAll=0.2 -aw 9 0 -aw 9 50 -aw 9 100 -aw 9 150 -aw 9 200 -aw 9 255
     python blynk_ctrl.py --token=909fa1... -aw 9 10 --delay=0.5 -aw 9 50 --delay=2.0 -aw 9 100
 
- Author:   Volodymyr Shymanskyy
+ Author:   Volodymyr Shymanskyy, Gabriele Lauricella
  License:  The MIT license
 '''
 import socket, struct

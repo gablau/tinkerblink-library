@@ -1,6 +1,8 @@
 /**
  * @file       BlynkApiGpiod.h
+ * @author     Gabriele Lauricella
  * @license    This project is released under the MIT License (MIT)
+ * @copyright  Copyright (c) 2026 Gabriele Lauricella
  * @brief      Linux client with the GPIO pins driven through libgpiod
  *             (Raspberry Pi and other boards with a GPIO character device).
  *

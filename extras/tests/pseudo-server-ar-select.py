@@ -9,7 +9,7 @@
    IPAddress serv(192,168,0,105); // IP address of your PC
    Blynk.begin(auth, serv, 8888);
 
- Author:   Volodymyr Shymanskyy
+ Author:   Volodymyr Shymanskyy, Gabriele Lauricella
  License:  The MIT license
 '''
 import select, socket, struct

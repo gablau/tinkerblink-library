@@ -16,7 +16,7 @@ Options:
  This is a pseudo-server that sends predefined pattern to any connected client.
  It is used to test transport behaviour and throughput.
 
- Author:   Volodymyr Shymanskyy
+ Author:   Volodymyr Shymanskyy, Gabriele Lauricella
  License:  The MIT license
 """
 

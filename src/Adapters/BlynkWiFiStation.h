@@ -1,6 +1,8 @@
 /**
  * @file       BlynkWiFiStation.h
+ * @author     Gabriele Lauricella
  * @license    This project is released under the MIT License (MIT)
+ * @copyright  Copyright (c) 2026 Gabriele Lauricella
  * @brief      Blynk over a WiFi library with the usual Arduino API
  *             (WiFi.begin/status/localIP): Raspberry Pi Pico W
  *             (arduino-pico), Arduino mbed boards (GIGA R1 WiFi)

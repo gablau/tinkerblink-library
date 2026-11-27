@@ -1,8 +1,9 @@
 /**
  * @file       BlynkSimpleEsp32_SSL.h
- * @author     Volodymyr Shymanskyy
+ * @author     Volodymyr Shymanskyy, Gabriele Lauricella
  * @license    This project is released under the MIT License (MIT)
  * @copyright  Copyright (c) 2015 Volodymyr Shymanskyy
+ *             Copyright (c) 2026 Gabriele Lauricella
  * @date       Dec 2017
  * @brief
  *

@@ -8,6 +8,9 @@ and keeps the results in extras/all-boards.json.
 
 Needs arduino-cli in the PATH, with the board packages to test installed
 (arduino-cli core install ...). The build log goes to ./build.log.
+
+ Author:   Volodymyr Shymanskyy, Gabriele Lauricella
+ License:  The MIT license
 """
 
 import json

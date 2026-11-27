@@ -5,7 +5,7 @@
  Example:
    ./pseudo-library.py -s myserver.example.com -p 8080 -t YourAuthToken --dump
 
- Author:   Volodymyr Shymanskyy
+ Author:   Volodymyr Shymanskyy, Gabriele Lauricella
  License:  The MIT license
 '''
 import select, socket, struct

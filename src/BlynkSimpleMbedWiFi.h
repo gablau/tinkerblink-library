@@ -1,6 +1,8 @@
 /**
  * @file       BlynkSimpleMbedWiFi.h
+ * @author     Gabriele Lauricella
  * @license    This project is released under the MIT License (MIT)
+ * @copyright  Copyright (c) 2026 Gabriele Lauricella
  * @brief      Arduino mbed boards with the WiFi library of their core:
  *             GIGA R1 WiFi, Portenta H7, Nicla Vision, Opta WiFi. Plain TCP
  *

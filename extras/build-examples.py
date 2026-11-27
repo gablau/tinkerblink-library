@@ -8,6 +8,9 @@ Builds the examples with arduino-cli, each one for the board in METADATA
 
 Needs arduino-cli in the PATH, with the board packages and the libraries
 used by the examples installed. The build log goes to ./build.log.
+
+ Author:   Volodymyr Shymanskyy, Gabriele Lauricella
+ License:  The MIT license
 """
 
 import fnmatch

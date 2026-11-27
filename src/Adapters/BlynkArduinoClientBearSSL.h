@@ -1,8 +1,9 @@
 /**
  * @file       BlynkArduinoClientBearSSL.h
- * @author     Volodymyr Shymanskyy
+ * @author     Volodymyr Shymanskyy, Gabriele Lauricella
  * @license    This project is released under the MIT License (MIT)
  * @copyright  Copyright (c) 2015 Volodymyr Shymanskyy
+ *             Copyright (c) 2026 Gabriele Lauricella
  * @brief      TLS transport on the BearSSL client of the ESP8266 and
  *             Raspberry Pi Pico W (arduino-pico) cores
  *

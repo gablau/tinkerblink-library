@@ -1,6 +1,8 @@
 /**
  * @file       BlynkSimplePicoW_SSL.h
+ * @author     Gabriele Lauricella
  * @license    This project is released under the MIT License (MIT)
+ * @copyright  Copyright (c) 2026 Gabriele Lauricella
  * @brief      Raspberry Pi Pico W and Pico 2 W (arduino-pico core), TLS
  *
  * How the server is verified: see Adapters/BlynkArduinoClientBearSSL.h
