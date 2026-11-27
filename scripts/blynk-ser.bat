@@ -5,8 +5,8 @@ REM === Edit these lines to match your need ===
 
 set COMM_PORT=COM1
 set COMM_BAUD=9600
-set SERV_ADDR=blynk-cloud.com
-set SERV_PORT=80
+set SERV_ADDR=myserver.example.com
+set SERV_PORT=8080
 
 REM === Edit lines below only if absolutely sure what you're doing ===
 
@@ -70,8 +70,8 @@ goto:eof
     echo.           COM1               (on Windows)
     echo.           /dev/tty.usbserial (on OSX)
     echo.     -b    9600
-    echo.     -s    blynk-cloud.com
-    echo.     -p    80
+    echo.     -s    myserver.example.com
+    echo.     -p    8080
     echo.
     echo.   If the specified serial port is not found, it will ask to enter another one.
     echo.   The script also tries to reestablish connection if it was lost.

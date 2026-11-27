@@ -7,14 +7,16 @@ popd > /dev/null
 # === Edit default options to match your need ===
 
 FROM_TYPE="SER" # SER, TCP
-TO_TYPE="SSL"   # TCP, SSL
+TO_TYPE="TCP"   # TCP, SSL
 
 COMM_BAUD=9600
-SERV_ADDR=blynk-cloud.com
-SERV_PORT_SSL=443
-SERV_PORT_TCP=80
+SERV_ADDR=myserver.example.com
+SERV_PORT_SSL=9443
+SERV_PORT_TCP=8080
 LSTN_PORT=80
 
+# For SSL: the CA (or self-signed certificate) of your server, PEM.
+# If the file is missing, the system CA certificates are used.
 SRVR_CERT="$SCRIPTPATH/certs/server.crt"
 CLNT_CERT="$SCRIPTPATH/certs/client.pem"
 
@@ -30,8 +32,11 @@ usage="
       -c,--comm      single available port (on Linux, OSX)
                      COM1                  (on Windows)
       -b,--baud      9600
-      -s,--server    blynk-cloud.com
-      -p,--port      80
+      -s,--server    myserver.example.com
+      -p,--port      8080 (9443 with -t SSL)
+      -t,--to        TCP, or SSL for a TLS connection
+      --cert         CA or certificate of the server, for SSL
+                     (certs/server.crt next to this script)
 
     If the specified serial port is not found, it will ask to enter another one.
     The script also tries to reestablish connection if it was lost.
@@ -215,8 +220,7 @@ elif [[ "$TO_TYPE" == "SSL" ]]; then
     if [ -e "$SRVR_CERT" ]; then
         TCP_ATTR="cafile=$SRVR_CERT,$TCP_ATTR"
     else
-        echo "Warning: $SRVR_CERT not found. Skipping server verification (connection may be insecure)!"
-        TCP_ATTR="verify=0,$TCP_ATTR"
+        echo "Note: $SRVR_CERT not found, the server is verified with the system CA certificates."
     fi
 
     if [ -e "$CLNT_CERT" ]; then
