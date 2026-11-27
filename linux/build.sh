@@ -1,24 +1,32 @@
 #!/bin/bash
+# Installs what the build needs (Debian, Raspberry Pi OS, Ubuntu) and builds.
 
 case "$1" in
-raspberry)
+linux)
     sudo apt-get update
-    sudo apt-get upgrade
-    sudo apt-get install build-essential git-core
-    git clone git://git.drogon.net/wiringPi
-    cd wiringPi
-    git pull origin
-    ./build
-    gpio -v
-    cd ..
-    make clean all target=raspberry
+    sudo apt-get install -y build-essential
+    make clean all
     exit 0
     ;;
-linux)
-    make clean all
+gpiod)
+    sudo apt-get update
+    sudo apt-get install -y build-essential pkg-config libgpiod-dev
+    make clean all target=gpiod
+    exit 0
+    ;;
+raspberry)
+    # WiringPi (legacy): https://github.com/WiringPi/WiringPi
+    sudo apt-get update
+    sudo apt-get install -y build-essential git
+    if ! hash gpio 2>/dev/null; then
+        git clone https://github.com/WiringPi/WiringPi.git
+        (cd WiringPi && ./build)
+    fi
+    gpio -v
+    make clean all target=raspberry
     exit 0
     ;;
 esac
 
-echo "Please specify platform: raspberry, linux"
+echo "Please specify the build: linux, gpiod (GPIO with libgpiod), raspberry (GPIO with WiringPi)"
 exit 1

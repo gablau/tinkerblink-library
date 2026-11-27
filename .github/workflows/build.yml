@@ -213,3 +213,24 @@ jobs:
       - uses: actions/checkout@v5
       - name: Build
         run: make -C linux
+
+  linux-gpiod:
+    name: Linux client, libgpiod ${{ matrix.gpiod }}
+    runs-on: ubuntu-latest
+    container: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - gpiod: 1.x
+            image: debian:bookworm
+          - gpiod: 2.x
+            image: debian:trixie
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install
+        run: apt-get update && apt-get install -y build-essential pkg-config libgpiod-dev
+      - name: Build
+        run: |
+          pkg-config --modversion libgpiod
+          make -C linux target=gpiod DEVICE="Raspberry Pi 4 B/400"

@@ -1,9 +1,15 @@
-# 
-# To build on RaspberryPi:
-# 1. Install WiringPi: http://wiringpi.com/download-and-install/
-# 2. Run:
+#
+# Plain Linux client (virtual pins only):
+#    make
+#
+# With GPIO through libgpiod (Raspberry Pi and other boards):
+#    sudo apt-get install build-essential pkg-config libgpiod-dev
+#    make target=gpiod
+#    ./blynk --token=YourAuthToken --server=myserver.example.com --port=8080
+#
+# With GPIO through WiringPi (legacy, https://github.com/WiringPi/WiringPi):
 #    make target=raspberry
-#    sudo blynk --token=YourAuthToken
+#    sudo ./blynk --token=YourAuthToken --server=myserver.example.com --port=8080
 #
 
 CC ?= gcc
@@ -48,6 +54,20 @@ endif
 ifeq ($(target),raspberry)
 	CXXFLAGS += -DRASPBERRY
 	LDFLAGS += -lwiringPi
+endif
+
+ifeq ($(target),gpiod)
+	GPIOD_MAJOR := $(shell pkg-config --modversion libgpiod 2>/dev/null | cut -d. -f1)
+	CXXFLAGS += -DBLYNK_GPIOD $(shell pkg-config --cflags libgpiod 2>/dev/null)
+	LDFLAGS += $(shell pkg-config --libs libgpiod 2>/dev/null || echo -lgpiod)
+    ifeq ($(shell test "$(GPIOD_MAJOR)" -ge 2 2>/dev/null && echo yes),yes)
+		CXXFLAGS += -DBLYNK_GPIOD_V2
+    endif
+endif
+
+# Board name sent to the server, e.g. make target=gpiod DEVICE="Raspberry Pi 4 B/400"
+ifdef DEVICE
+	CXXFLAGS += '-DBLYNK_INFO_DEVICE="$(DEVICE)"'
 endif
 
 SOURCES=main.cpp \

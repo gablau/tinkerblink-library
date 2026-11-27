@@ -9,8 +9,10 @@
 
 //#define BLYNK_DEBUG
 #define BLYNK_PRINT stdout
-#ifdef RASPBERRY
+#if defined(RASPBERRY)
   #include <BlynkApiWiringPi.h>
+#elif defined(BLYNK_GPIOD)
+  #include <BlynkApiGpiod.h>
 #else
   #include <BlynkApiLinux.h>
 #endif
