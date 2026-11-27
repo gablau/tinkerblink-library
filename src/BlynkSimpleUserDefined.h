@@ -12,7 +12,7 @@
 #define BlynkSimpleUserManaged_h
 
 #warning "This user-defined connection is now deprecated."
-#warning "Please use https://github.com/blynkkk/blynk-library/tree/master/examples/More/ArduinoClient examples"
+#warning "Please use the examples in examples/More/ArduinoClient of the TinkerBlink Library"
 
 #ifndef BLYNK_INFO_CONNECTION
 #define BLYNK_INFO_CONNECTION "custom"

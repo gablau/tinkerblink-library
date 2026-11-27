@@ -1,3 +1,6 @@
-## Please take a look at:
-[Blynk Firmware documentation](http://docs.blynk.cc/#blynk-firmware)  
-[Blynk Help Center](http://help.blynk.cc)
+## Documentation
+
+- [TinkerBlink Library README](../../README.md): installation, server and ports, TLS, supported
+  hardware.
+- [Examples](../../examples): a sketch for every connection type and widget.
+- [TinkerBlink](https://github.com/gablau/tinkerblink): the app, with the widget docs.
