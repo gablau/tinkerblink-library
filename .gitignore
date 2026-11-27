@@ -12,3 +12,4 @@ extras/ide-tools/BlynkUsbScript/*
 .project
 .settings
 .development
+extras/tests/HardwareTestEsp32/test_settings.h

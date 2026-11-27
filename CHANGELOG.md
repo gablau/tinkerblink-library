@@ -20,6 +20,8 @@ First release of TinkerBlink Library, based on the Blynk library 0.6.1 (Legacy).
   "ESP32-C3 SuperMini"); other ESP32 chips report "ESP32-S2", "ESP32-S3", "ESP32-C3", "ESP32-C6".
 - Analog write (PWM) from the app works on ESP32 with Arduino core 2.0.1 or newer; 0.6.1 ignored it
   on every ESP32.
+- Checked on hardware with blynk-server 0.50: ESP32-S3 SuperMini, LOLIN S2 Mini, ESP32-C3
+  SuperMini.
 
 ### Security
 
@@ -54,6 +56,9 @@ First release of TinkerBlink Library, based on the Blynk library 0.6.1 (Legacy).
 - Examples use `myserver.example.com` instead of `blynk-cloud.com`.
 - Library name "TinkerBlink Library", version 0.7.0 (also reported to the server as `ver`). The
   banner printed on the serial log at start shows the TinkerBlink logo.
+- Hardware test sketch for ESP32 boards: `extras/tests/HardwareTestEsp32` (connection, virtual
+  pins, Terminal, digital and analog write, RGB LED; own settings in an untracked
+  `test_settings.h`).
 - Builds checked by GitHub Actions on AVR, ESP8266 (cores 2.7.4 and 3.x), ESP32 (cores 2.0 and 3.x;
   ESP32-S2, S3, C3, C6, Nano ESP32), Raspberry Pi Pico W and Pico 2 W, UNO R4 WiFi, GIGA R1 WiFi
   and Nano RP2040 Connect.

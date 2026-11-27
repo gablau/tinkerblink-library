@@ -198,6 +198,31 @@ For the boards added in 0.7.0 (Pico W, Pico 2 W, UNO R4, GIGA R1 WiFi, Nano RP20
 ESP32, the ESP32-S2/S3/C3/C6 and LOLIN boards) the board name sent to the server (`dev`) is the one
 used by [tinkerblink-boards](https://github.com/gablau/tinkerblink-boards).
 
+The name comes from the board selected in the IDE, not from the hardware: an ESP32-C3 SuperMini
+reports "ESP32-C3 SuperMini" when built as "Nologo ESP32C3 Super Mini" (ESP32 core 3.x), and
+"ESP32-C3" when built as "ESP32C3 Dev Module". Boards without an entry of their own, such as the
+ESP32-S3 SuperMini, report the chip ("ESP32-S3"). To send another name, define it before the
+include:
+
+```cpp
+#define BLYNK_INFO_DEVICE "ESP32-S3 SuperMini"
+#include <BlynkSimpleEsp32.h>
+```
+
+ESP32 notes:
+
+- Analog write (PWM) from the app needs ESP32 Arduino core 2.0.1 or newer.
+- The RGB LED of many ESP32-S3 and C3 boards (a WS2812 on GPIO48 or GPIO8) does not respond to
+  digital or analog write: drive it from a virtual pin, e.g. a zeRGBa in MERGE mode and
+  `neopixelWrite(pin, r, g, b)` in `BLYNK_WRITE()`.
+- The SuperMini boards and the LOLIN S2 Mini print on the native USB: enable "USB CDC On Boot" in
+  the IDE to see the serial log.
+
+Checked on hardware with blynk-server 0.50 (plain TCP): ESP32-S3 SuperMini, LOLIN S2 Mini and
+ESP32-C3 SuperMini, with [extras/tests/HardwareTestEsp32](extras/tests/HardwareTestEsp32):
+connection and reconnection, virtual pins, Terminal, digital write and PWM. The other new boards
+are checked by the CI build only.
+
 ## Related projects
 
 - [TinkerBlink](https://github.com/gablau/tinkerblink): the mobile app.
@@ -213,6 +238,9 @@ used by [tinkerblink-boards](https://github.com/gablau/tinkerblink-boards).
 Bug reports and pull requests are welcome. The library must keep working with blynk-server 0.41.x
 and 0.50.x: a change to what the board sends needs a check against the server sources. Every push
 is built by [GitHub Actions](.github/workflows/build.yml) on AVR, ESP8266, ESP32, RP2040, Renesas and mbed boards.
+To check a change on an ESP32 board against a server, use
+[extras/tests/HardwareTestEsp32](extras/tests/HardwareTestEsp32): its header lists the widgets to
+add in the app.
 
 ## License
 
