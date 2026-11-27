@@ -19,7 +19,7 @@ def fr(color):
     surface = ImageDraw.Draw(im)
     surface.ellipse((10,10,W-20,H-20), fill=color)
     del surface
-    return np.array(im.resize((16,16), Image.ANTIALIAS))
+    return np.array(im.resize((16,16), Image.LANCZOS))
 
 def fade(color):
     frames = []

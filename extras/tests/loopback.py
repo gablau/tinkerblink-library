@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """USAGE: loopback.py [options]
 
@@ -32,7 +32,7 @@ try:
         "hb:p:",
         ["help", "bind=", "port=", "sndbuf=", "rcvbuf=", "nodelay", "sleep=", "qty=", "freq=", "msg=", "dump"])
 except getopt.GetoptError:
-    print >>sys.stderr, __doc__
+    print(__doc__, file=sys.stderr)
     sys.exit(2)
 
 # Default options
@@ -48,7 +48,7 @@ DUMP = 0
 
 for o, v in opts:
     if o in ("-h", "--help"):
-        print __doc__
+        print(__doc__)
         sys.exit()
     elif o in ("-b", "--bind"):
         HOST = v
@@ -75,7 +75,7 @@ for o, v in opts:
 
 start_time = time.time()
 def log(msg):
-    print "[{:7.3f}] {:}".format(float(time.time() - start_time), msg)
+    print("[{:7.3f}] {:}".format(float(time.time() - start_time), msg))
 
 draw_col = 0
 def draw(c):
@@ -93,34 +93,34 @@ def dump(msg):
         log(msg)
 
 def receive(sock, length):
-	d = []
-	l = 0
-	while l < length:
-		r = sock.recv(length-l)
-		if not r:
-			return ''
-		d.append(r)
-		l += len(r)
-	return ''.join(d)
+    d = []
+    l = 0
+    while l < length:
+        r = sock.recv(length-l)
+        if not r:
+            return b''
+        d.append(r)
+        l += len(r)
+    return b''.join(d)
 
 # Threads
 
 def readthread(conn, addr):
-	global msgs_in
-	while(msgs_in < MSG_QTY):
-		data = receive(conn, len(MSG))
-		if data != MSG:
-			log("Data is wrong:" + data)
-			#break
-		draw('v')
-		dump("> " + data)
-		msgs_in += 1
+    global msgs_in
+    while(msgs_in < MSG_QTY):
+        data = receive(conn, len(MSG.encode()))
+        if data != MSG.encode():
+            log("Data is wrong: " + data.decode('utf-8', 'replace'))
+            #break
+        draw('v')
+        dump("> " + data.decode('utf-8', 'replace'))
+        msgs_in += 1
 
 
 def writethread(conn, addr):
     global msgs_out
     while (msgs_out < MSG_QTY):
-        conn.sendall(MSG)
+        conn.sendall(MSG.encode())
         draw('.')
         dump("< " + MSG)
         msgs_out += 1
@@ -134,8 +134,8 @@ try:
     # Set SO_REUSEADDR, this is needed to ignore WAIT state on next run
     serv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     serv.bind((HOST, PORT))
-except socket.error as msg:
-    log('Bind failed. Error Code: {0}, Msg: {1}'.format(str(msg[0]), msg[1]))
+except OSError as msg:
+    log('Bind failed: {0}'.format(msg))
     sys.exit()
 
 serv.listen(1)
@@ -146,15 +146,15 @@ log('Listening on port %d' % PORT)
 conn, addr = serv.accept()
 log('Connection from {0}:{1}'.format(addr[0], str(addr[1])))
 if NODELAY != 0:
-	conn.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+    conn.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 if SNDBUF != 0:
-	sndbuf = conn.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF)
-	log('Default SNDBUF %s changed to %s' % (sndbuf, SNDBUF))
-	conn.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, SNDBUF)
+    sndbuf = conn.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF)
+    log('Default SNDBUF %s changed to %s' % (sndbuf, SNDBUF))
+    conn.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, SNDBUF)
 if RCVBUF != 0:
-	rcvbuf = conn.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
-	log('Default RCVBUF %s changed to %s' % (rcvbuf, RCVBUF))
-	conn.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, RCVBUF)
+    rcvbuf = conn.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
+    log('Default RCVBUF %s changed to %s' % (rcvbuf, RCVBUF))
+    conn.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, RCVBUF)
 
 proc_start = time.time()
 msgs_in = 0

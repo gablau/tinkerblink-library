@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 '''
 examples:
 
@@ -72,8 +72,8 @@ parser.add_argument('--target',       action="store",      dest='target', metava
 parser.add_argument('--dump',         action="store_true", dest='dump',             help='dump communication')
 
 parser.set_defaults(
-    server='blynk-cloud.com',
-    port=80,
+    server='myserver.example.com',
+    port=8080,
     dump=False,
     nodelay=True,
     bridge=64,
@@ -118,7 +118,7 @@ class MsgStatus:
 
 def compose(msg_type, *args):
     # Convert params to string and join using \0
-    data = "\0".join(map(str, args))
+    data = "\0".join(map(str, args)).encode()
     msg_id = genMsgId()
     msg_len = len(data)
     log.debug(" < %2d,%2d,%2d : %s", msg_type, msg_id, msg_len, "=".join(map(str, args)))
@@ -134,16 +134,16 @@ def receive(sock, length):
     d = []
     l = 0
     while l < length:
-        r = ''
+        r = b''
         try:
             r = sock.recv(length-l)
         except socket.timeout:
             continue
         if not r:
-            return ''
+            return b''
         d.append(r)
         l += len(r)
-    return ''.join(d)
+    return b''.join(d)
 
 # Main code
 try:
@@ -179,14 +179,14 @@ def do_read(cmd, pin):
         if msg_type == MsgType.RSP:
             log.debug(" > %2d,%2d    : status %2d", msg_type, msg_id, msg_len)
         elif msg_type == MsgType.HW or msg_type == MsgType.BRIDGE:
-            data = receive(conn, msg_len).split("\0")
+            data = receive(conn, msg_len).decode('utf-8', 'replace').split("\0")
             log.debug(" > %2d,%2d,%2d : %s", msg_type, msg_id, msg_len, "=".join(data))
             if data[0] == cmd[0]+'w' and data[1] == pin:
                 data = data[2:]
                 if len(data) > 1:
-                    print data
+                    print(data)
                 else:
-                    print data[0]
+                    print(data[0])
                 break
 
 for op in args.ops:

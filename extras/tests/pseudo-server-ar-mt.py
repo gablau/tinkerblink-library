@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 '''
  This is a pseudo-server that sends predefined pattern to any connected client.
  It is used to test transport behaviour and throughput.
@@ -24,7 +24,7 @@ try:
         "hb:p:",
         ["help", "bind=", "port=", "sndbuf=", "rcvbuf=", "nodelay", "sleep=", "qty=", "freq=", "pin=", "dump"])
 except getopt.GetoptError:
-    print >>sys.stderr, __doc__
+    print(__doc__, file=sys.stderr)
     sys.exit(2)
 
 # Default options
@@ -40,7 +40,7 @@ DUMP = 0
 
 for o, v in opts:
     if o in ("-h", "--help"):
-        print __doc__
+        print(__doc__)
         sys.exit()
     elif o in ("-b", "--bind"):
         HOST = v
@@ -71,6 +71,7 @@ hdr = struct.Struct("!BHH")
 class MsgType:
     RSP    = 0
     LOGIN  = 2
+    HW_LOGIN = 29   # sent by the library since 0.5
     PING   = 6
     HW     = 20
 
@@ -79,7 +80,7 @@ class MsgStatus:
 
 def hw(*args):
     # Convert params to string and join using \0
-    data = "\0".join(map(str, args))
+    data = "\0".join(map(str, args)).encode()
     dump("< " + " ".join(map(str, args)))
     # Prepend HW command header
     return hdr.pack(MsgType.HW, 1, len(data)) + data
@@ -88,7 +89,7 @@ def hw(*args):
 
 start_time = time.time()
 def log(msg):
-    print "[{:7.3f}] {:}".format(float(time.time() - start_time), msg)
+    print("[{:7.3f}] {:}".format(float(time.time() - start_time), msg))
 
 draw_col = 0
 def draw(c):
@@ -106,58 +107,59 @@ def dump(msg):
         log(msg)
 
 def receive(sock, length):
-	d = []
-	l = 0
-	while l < length:
-		r = sock.recv(length-l)
-		if not r:
-			return ''
-		d.append(r)
-		l += len(r)
-	return ''.join(d)
+    d = []
+    l = 0
+    while l < length:
+        r = sock.recv(length-l)
+        if not r:
+            return b''
+        d.append(r)
+        l += len(r)
+    return b''.join(d)
 
 # Threads
 
 def readthread(conn, addr):
-	global msgs_in, authenticated
-	while(msgs_in < MSG_QTY):
-		data = receive(conn, hdr.size)
-		if not data:
-			break
-		msg_type, msg_id, msg_len = hdr.unpack(data)
-		#dump("Got {0}, {1}, {2}".format(msg_type, msg_id, msg_len))
-		if msg_type == MsgType.RSP:
-			pass
-		elif msg_type == MsgType.LOGIN:
-			auth = receive(conn, msg_len)
-			log("Auth {0}".format(auth))
-			# Send auth OK and pin modes
-			conn.sendall(hdr.pack(MsgType.RSP, msg_id, MsgStatus.OK))
-			conn.sendall(hw("pm", HW_PIN, "in"))
-			authenticated = True
-		elif msg_type == MsgType.PING:
-			log("Ping")
-			# Send Pong
-			conn.sendall(hdr.pack(MsgType.RSP, msg_id, MsgStatus.OK))
-		elif msg_type == MsgType.HW:
-			data = receive(conn, msg_len)
-			# Print HW messages (just for fun :)
-			draw('v')
-			dump("> " + " ".join(data.split("\0")))
-			msgs_in += 1
-		else:
-			log("Unknown msg type")
-			break
+    global msgs_in, authenticated
+    while(msgs_in < MSG_QTY):
+        data = receive(conn, hdr.size)
+        if not data:
+            break
+        msg_type, msg_id, msg_len = hdr.unpack(data)
+        #dump("Got {0}, {1}, {2}".format(msg_type, msg_id, msg_len))
+        if msg_type == MsgType.RSP:
+            pass
+        elif msg_type in (MsgType.LOGIN, MsgType.HW_LOGIN):
+            auth = receive(conn, msg_len)
+            log("Auth {0}".format(auth.decode('utf-8', 'replace')))
+            # Send auth OK and pin modes
+            conn.sendall(hdr.pack(MsgType.RSP, msg_id, MsgStatus.OK))
+            conn.sendall(hw("pm", HW_PIN, "in"))
+            authenticated = True
+        elif msg_type == MsgType.PING:
+            log("Ping")
+            # Send Pong
+            conn.sendall(hdr.pack(MsgType.RSP, msg_id, MsgStatus.OK))
+        elif msg_type == MsgType.HW:
+            data = receive(conn, msg_len)
+            # Print HW messages (just for fun :)
+            draw('v')
+            dump("> " + " ".join(data.decode('utf-8', 'replace').split("\0")))
+            msgs_in += 1
+        else:
+            # Other messages (e.g. board info): skip the body
+            receive(conn, msg_len)
+            dump("Skipped msg type {0}".format(msg_type))
 
 
 def writethread(conn, addr):
-	global msgs_out, authenticated
-	while (msgs_out < MSG_QTY):
-		if authenticated:
-			conn.sendall(hw("ar", HW_PIN))
-			draw('.')
-			msgs_out += 1
-		time.sleep(SLEEP)
+    global msgs_out, authenticated
+    while (msgs_out < MSG_QTY):
+        if authenticated:
+            conn.sendall(hw("ar", HW_PIN))
+            draw('.')
+            msgs_out += 1
+        time.sleep(SLEEP)
 
 
 # Main code
@@ -167,8 +169,8 @@ try:
     # Set SO_REUSEADDR, this is needed to ignore WAIT state on next run
     serv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     serv.bind((HOST, PORT))
-except socket.error as msg:
-    log('Bind failed. Error Code: {0}, Msg: {1}'.format(str(msg[0]), msg[1]))
+except OSError as msg:
+    log('Bind failed: {0}'.format(msg))
     sys.exit()
 
 serv.listen(1)
@@ -179,15 +181,15 @@ log('Listening on port %d' % PORT)
 conn, addr = serv.accept()
 log('Connection from {0}:{1}'.format(addr[0], str(addr[1])))
 if NODELAY != 0:
-	conn.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+    conn.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 if SNDBUF != 0:
-	sndbuf = conn.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF)
-	log('Default SNDBUF %s changed to %s' % (sndbuf, SNDBUF))
-	conn.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, SNDBUF)
+    sndbuf = conn.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF)
+    log('Default SNDBUF %s changed to %s' % (sndbuf, SNDBUF))
+    conn.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, SNDBUF)
 if RCVBUF != 0:
-	rcvbuf = conn.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
-	log('Default RCVBUF %s changed to %s' % (rcvbuf, RCVBUF))
-	conn.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, RCVBUF)
+    rcvbuf = conn.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
+    log('Default RCVBUF %s changed to %s' % (rcvbuf, RCVBUF))
+    conn.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, RCVBUF)
 
 proc_start = time.time()
 msgs_in = 0

@@ -1,9 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 '''
  This is a pseudo-library implementation
  
  Example:
-   ./pseudo-library.py -t b168ccc8c8734fad98323247afbc1113 --dump
+   ./pseudo-library.py -s myserver.example.com -p 8080 -t YourAuthToken --dump
 
  Author:   Volodymyr Shymanskyy
  License:  The MIT license
@@ -20,12 +20,12 @@ try:
         "hs:p:t:",
         ["help", "server=", "port=", "token=", "sndbuf=", "rcvbuf=", "nodelay=", "dump"])
 except getopt.GetoptError:
-    print >>sys.stderr, __doc__
+    print(__doc__, file=sys.stderr)
     sys.exit(2)
 
 # Default options
-SERVER = "blynk-cloud.com"
-PORT = 80
+SERVER = "myserver.example.com"
+PORT = 8080
 NODELAY = 1     # TCP_NODELAY
 SNDBUF = 0      # No SNDBUF override
 RCVBUF = 0      # No RCVBUF override
@@ -34,7 +34,7 @@ DUMP = 0
 
 for o, v in opts:
     if o in ("-h", "--help"):
-        print __doc__
+        print(__doc__)
         sys.exit()
     elif o in ("-s", "--server"):
         SERVER = v
@@ -68,7 +68,7 @@ class MsgStatus:
 
 def hw(*args):
     # Convert params to string and join using \0
-    data = "\0".join(map(str, args))
+    data = "\0".join(map(str, args)).encode()
     dump("< " + " ".join(map(str, args)))
     # Prepend HW command header
     return hdr.pack(MsgType.HW, genMsgId(), len(data)) + data
@@ -139,7 +139,7 @@ def genMsgId():
 
 start_time = time.time()
 def log(msg):
-    print "[{:7.3f}] {:}".format(float(time.time() - start_time), msg)
+    print("[{:7.3f}] {:}".format(float(time.time() - start_time), msg))
 
 def dump(msg):
     if DUMP:
@@ -149,16 +149,16 @@ def receive(sock, length):
     d = []
     l = 0
     while l < length:
-        r = ''
+        r = b''
         try:
             r = sock.recv(length-l)
         except socket.timeout:
             continue
         if not r:
-            return ''
+            return b''
         d.append(r)
         l += len(r)
-    return ''.join(d)
+    return b''.join(d)
 
 # Threads
 
@@ -176,7 +176,7 @@ def readthread(conn):
             # Send Pong
             conn.sendall(hdr.pack(MsgType.RSP, msg_id, MsgStatus.OK))
         elif msg_type == MsgType.HW or msg_type == MsgType.BRIDGE:
-            data = receive(conn, msg_len)
+            data = receive(conn, msg_len).decode('utf-8', 'replace')
             # Print HW message
             dump("> " + " ".join(data.split("\0")))
             handle_hw(data)
@@ -212,7 +212,7 @@ if RCVBUF != 0:
     
 # Authenticate
 conn.sendall(hdr.pack(MsgType.LOGIN, genMsgId(), len(TOKEN)))
-conn.sendall(TOKEN)
+conn.sendall(TOKEN.encode())
 data = receive(conn, hdr.size)
 if not data:
     log("Auth timeout")

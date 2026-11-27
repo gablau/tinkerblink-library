@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 '''
  This is a pseudo-server that sends predefined pattern to any connected client.
  It is used to test transport behaviour and throughput.
@@ -37,7 +37,7 @@ DUMP = 0
 
 for o, v in opts:
     if o in ("-h", "--help"):
-        usage()
+        print(__doc__)
         sys.exit()
     elif o in ("-b", "--bind"):
         HOST = v
@@ -68,6 +68,7 @@ hdr = struct.Struct("!BHH")
 class MsgType:
     RSP    = 0
     LOGIN  = 2
+    HW_LOGIN = 29   # sent by the library since 0.5
     PING   = 6
     HW     = 20
 
@@ -76,14 +77,14 @@ class MsgStatus:
 
 def hw(*args):
     # Convert params to string and join using \0
-    data = "\0".join(map(str, args))
+    data = "\0".join(map(str, args)).encode()
     dump("< " + " ".join(map(str, args)))
     # Prepend HW command header
     return hdr.pack(MsgType.HW, 1, len(data)) + data
 
 start_time = time.time()
 def log(msg):
-    print "[{:7.3f}] {:}".format(float(time.time() - start_time), msg)
+    print("[{:7.3f}] {:}".format(float(time.time() - start_time), msg))
 
 def draw(c):
     if not DUMP:
@@ -95,15 +96,15 @@ def dump(msg):
         log(msg)
 
 def receive(sock, length):
-	d = []
-	l = 0
-	while l < length:
-		r = sock.recv(length-l)
-		if not r:
-			return ''
-		d.append(r)
-		l += len(r)
-	return ''.join(d)
+    d = []
+    l = 0
+    while l < length:
+        r = sock.recv(length-l)
+        if not r:
+            return b''
+        d.append(r)
+        l += len(r)
+    return b''.join(d)
 
 
 def clientthread(conn, addr):
@@ -144,9 +145,9 @@ def clientthread(conn, addr):
             #dump("Got {0}, {1}, {2}".format(msg_type, msg_id, msg_len))
             if msg_type == MsgType.RSP:
                 pass
-            elif msg_type == MsgType.LOGIN:
+            elif msg_type in (MsgType.LOGIN, MsgType.HW_LOGIN):
                 auth = receive(conn, msg_len)
-                log("Auth {0}".format(auth))
+                log("Auth {0}".format(auth.decode('utf-8', 'replace')))
                 # Send auth OK and pin modes
                 conn.sendall(hdr.pack(MsgType.RSP, msg_id, MsgStatus.OK))
                 conn.sendall(hw("pm", HW_PIN, "in"))
@@ -159,13 +160,14 @@ def clientthread(conn, addr):
                 data = receive(conn, msg_len)
                 # Print HW messages (just for fun :)
                 draw('v')
-                dump("> " + " ".join(data.split("\0")))
+                dump("> " + " ".join(data.decode('utf-8', 'replace').split("\0")))
                 msgs_in += 1
                 if msgs_out >= MSG_QTY:
                     msgs_delta += 1
             else:
-                log("Unknown msg type")
-                break
+                # Other messages (e.g. board info): skip the body
+                receive(conn, msg_len)
+                dump("Skipped msg type {0}".format(msg_type))
         if ws:
             if authenticated and msgs_out < MSG_QTY:
                 conn.sendall(hw("ar", HW_PIN))
@@ -192,8 +194,8 @@ try:
     # Set SO_REUSEADDR, this is needed to ignore WAIT state on next run
     serv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     serv.bind((HOST, PORT))
-except socket.error as msg:
-    log('Bind failed. Error Code: {0}, Msg: {1}'.format(str(msg[0]), msg[1]))
+except OSError as msg:
+    log('Bind failed: {0}'.format(msg))
     sys.exit()
 
 serv.listen(10)

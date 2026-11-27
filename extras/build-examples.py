@@ -1,12 +1,24 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+"""
+Builds the examples with arduino-cli, each one for the board in METADATA
+(Arduino Uno when not listed).
 
-import os, sys, fnmatch
-from subprocess import call
+  python3 extras/build-examples.py                 all the examples
+  python3 extras/build-examples.py <name>.ino      one example
 
-arduino_ide_path = os.environ['ARDUINO_IDE_PATH']
-energia_ide_path = os.environ['ENERGIA_IDE_PATH']
+Needs arduino-cli in the PATH, with the board packages and the libraries
+used by the examples installed. The build log goes to ./build.log.
+"""
 
-ESP8266 = { "fqbn": "esp8266:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M" }
+import fnmatch
+import os
+import subprocess
+import sys
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+ESP8266 = { "fqbn": "esp8266:esp8266:nodemcuv2" }
+ESP32 = { "fqbn": "esp32:esp32:esp32" }
 
 metadata = {
   "Arduino_Yun.ino"             : { "fqbn": "arduino:avr:yun" },
@@ -35,7 +47,8 @@ metadata = {
   "ESP8266_AccessPoint.ino"     : ESP8266,
   "ESP8266_WiFi.ino"            : ESP8266,
 
-  "ESP32_WiFi.ino"              : { "fqbn": "espressif:esp32:esp32:FlashMode=qio,FlashFreq=80,FlashSize=4M" },
+  "ESP32_WiFi.ino"              : ESP32,
+  "ESP32_WiFi_SSL.ino"          : ESP32,
 
   "myPlant_ESP8266.ino"         : ESP8266,
   "Template_ESP8266.ino"        : ESP8266,
@@ -87,106 +100,63 @@ metadata = {
   # No linux support
   "LinkItONE.ino"               : { "skip": True },
 
-  # Energia
-  "Energia_WiFi.ino"            : { "fqbn": "energia:msp430:MSP-EXP430F5529LP" },
-  "Energia_BLE.ino"             : { "fqbn": "energia:msp432r:MSP-EXP432P401RR" },
-  "Energia_Ethernet.ino"        : { "fqbn": "energia:tivac:EK-TM4C1294XL" },
-  "Energia_Serial_USB.ino"      : { "fqbn": "energia:tivac:EK-LM4F120XL" },
+  # Energia: not supported by arduino-cli
+  "Energia_WiFi.ino"            : { "skip": True },
+  "Energia_BLE.ino"             : { "skip": True },
+  "Energia_Ethernet.ino"        : { "skip": True },
+  "Energia_Serial_USB.ino"      : { "skip": True },
 }
+
 
 def find_files(directory, pattern):
     for root, dirs, files in os.walk(directory):
         for basename in files:
             if fnmatch.fnmatch(basename, pattern):
-                filename = os.path.join(root, basename)
-                yield filename
+                yield os.path.join(root, basename)
 
-examples = find_files('examples', '*.ino')
-abs_examples = map(lambda x: os.path.abspath(x), examples)
 
-logfile = open("./build.log","wb")
+def main():
+    only = sys.argv[1] if len(sys.argv) > 1 else None
+    failed, built, skipped = [], [], []
 
-'''
-builder = "./arduino-builder"
+    with open('build.log', 'w') as log:
+        for fn in sorted(find_files(os.path.join(ROOT, 'examples'), '*.ino')):
+            path, ino = os.path.split(fn)
+            m = metadata.get(ino, {})
+            if ino in metadata:
+                m['sketch_found'] = True
+            if only and ino != only:
+                continue
+            if m.get('skip'):
+                skipped.append(ino)
+                continue
+            fqbn = m.get('fqbn', 'arduino:avr:uno')
 
-builder_args = [
-  "-verbose",
+            log.write('\n\n=================\nBuilding: %s (%s)\n=================\n\n' % (ino, fqbn))
+            log.flush()
+            print('Building:', ino, '...', end=' ', flush=True)
 
-  "-hardware", "./hardware",
-  "-hardware", os.path.expanduser("~/.arduino15/packages/"),
-  "-hardware", "/data2/sketchbook/hardware",
+            rc = subprocess.call(['arduino-cli', 'compile', '--fqbn', fqbn, '--library', ROOT, path],
+                                 stdout=log, stderr=subprocess.STDOUT)
+            if rc:
+                print('Failed')
+                failed.append(ino)
+            else:
+                print('OK')
+                built.append(ino)
 
-  "-tools",    "./hardware/tools",
-  "-tools",    os.path.expanduser("~/.arduino15/packages/"),
-  "-tools",    "./tools-builder",
+    print('==================')
+    if skipped:
+        print(' Skipped:', len(skipped))
+    if not only:
+        for ino, m in metadata.items():
+            if 'sketch_found' not in m:
+                print(' Sketch not found:', ino)
+    if failed:
+        print(' Failed:', failed)
+        sys.exit(1)
+    print(' All', len(built), 'examples OK')
 
-  "-libraries",os.path.expanduser("~/.arduino15/packages/"),
-  "-libraries","./libraries",
-  "-libraries","/data2/sketchbook/libraries/",
-]
-'''
 
-failed = []
-built = []
-skipped = []
-
-for fn in abs_examples:
-    path, ino = os.path.split(fn)
-
-    if ino in metadata:
-        m = metadata[ino]
-        m['sketch_found'] = True
-        if "skip" in m:
-            skipped.append(ino)
-            continue
-        if not "fqbn" in m:
-            m["fqbn"] = "arduino:avr:uno"
-    else:
-        #continue
-        m = { "fqbn": "arduino:avr:uno" }
-
-    if len(sys.argv) > 1:
-        if ino != sys.argv[1]:
-            continue
-
-    print >>logfile, "\n\n", "================="
-    print >>logfile, "Building:", ino
-    print >>logfile, "=================", "\n"
-    logfile.flush()
-
-    print "Building:", ino, "...",
-    sys.stdout.flush()
-
-    if m["fqbn"].startswith("energia:"):
-        os.chdir(energia_ide_path)
-        builder = "./energia"
-    else:
-        os.chdir(arduino_ide_path)
-        builder = "./arduino"
-
-    cmd = [
-        builder,
-        "--verbose",
-        "--verify",
-        "--board", m["fqbn"],
-        fn
-    ]
-    #print cmd
-    rc = call(cmd, stdout=logfile, stderr=logfile)
-    if rc:
-        print "Failed"
-        failed.append(ino)
-    else:
-        print "OK"
-        built.append(ino)
-
-print "=================="
-if len(failed):
-    print " Failed:", failed
-    sys.exit(1)
-else:
-    print " All", len(built), "examples OK"
-
-for ino, m in metadata.items():
-    if not 'sketch_found' in m:
-        print "Sketch not found:", ino
+if __name__ == '__main__':
+    main()
